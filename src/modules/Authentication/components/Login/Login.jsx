@@ -1,46 +1,50 @@
-import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { CiLock } from "react-icons/ci";
-import { CiMobile1 } from "react-icons/ci";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { authAPI } from "../../../../api";
+export default function Login({ saveLoginData }) {
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-export default function Login() {
+  const togglePassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   let {
     register,
     formState: { errors },
     handleSubmit,
   } = useForm();
   const navigate = useNavigate();
+ 
 
+  
   const onSubmit = async (data) => {
+     if (loading) return;
+     setLoading(true);
     try {
-      const response = await axios.post(
-        "https://upskilling-egypt.com:3006/api/v1/Users/Login",
-        data,
-      );
+      const response = await authAPI.Login(data);
       localStorage.setItem("token", response.data.token);
+      saveLoginData();
       toast.success("Login Successfully");
       navigate("/dashboard");
     } catch (error) {
-      console.log(error);
-      toast.error("Something went wrong");
+      toast.error(error.response?.data);
+    } finally {
+      setLoading(false);
     }
   };
-
   return (
     <div>
       <div className="title mb-4">
-        <h3 className="h5">Log In</h3>
-        <span className="text-muted">
-          Welcome Back! Please enter your details
-        </span>
+        <h3 className="h4 fw-bold auth-header">Log In</h3>
+        <span className=" auth-p">Welcome Back! Please enter your details</span>
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="input-group   ">
-          <span className="input-group-text">
-            <CiMobile1 className="text-muted" />
+          <span className="input-group-text with-border  ">
+            <i className="fa-solid fa-envelope  "></i>
           </span>
           <input
             {...register("email", {
@@ -52,44 +56,48 @@ export default function Login() {
             })}
             type="email"
             placeholder="enter your email"
-            className="form-control "
-            style={{ backgroundColor: "#F7F7F7" }}
+            className="form-control custom-input "
           />
         </div>
         {errors.email && (
           <span className="text-danger">{errors.email.message}</span>
         )}
 
-        <div className="input-group mt-3 ">
-          <span className="input-group-text">
-            <CiLock className="text-muted" />
+        <div className="input-group mt-4">
+          <span className="input-group-text ">
+            <i className="fa-solid fa-lock "></i>
           </span>
           <input
             {...register("password", {
               required: "field is required",
             })}
-            type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="enter your password"
-            className="form-control"
-            style={{ backgroundColor: "#F7F7F7" }}
+            className="form-control custom-input "
           />
+          <span
+            onClick={togglePassword}
+            className="input-group-text no-border ">
+            <i
+              className={`fa-solid ${showPassword ? "fa-eye-slash" : "fa-eye"} `}></i>
+          </span>
         </div>
         {errors.password && (
           <span className="text-danger">{errors.password.message}</span>
         )}
-        <div className="links d-flex justify-content-between mt-4">
+        <div className="links d-flex justify-content-between my-2">
           <Link to="/register" className="text-muted text-decoration-none">
             Register Now?
           </Link>
-          <Link
-            to="/forget-pass"
-            className="text-decoration-none link-success ">
+          <Link to="/forget-pass" className="text-decoration-none main-color ">
             Forgot Password?
           </Link>
         </div>
 
-        <button className="btn btn-success w-100 rounded rounded-2 text-white my-3">
-          Login
+        <button
+          disabled={loading}
+          className=" w-100 rounded rounded-2 auth-btn  text-white my-4">
+          {loading ? "Loading..." : "Login"}
         </button>
       </form>
     </div>

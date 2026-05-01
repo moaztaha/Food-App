@@ -1,11 +1,10 @@
-import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { CiLock } from "react-icons/ci";
-import { CiMobile1 } from "react-icons/ci";
 import { Link, useNavigate } from "react-router-dom";
+import { authAPI } from "../../../../api";
 
 export default function ForgetPass() {
+  const [loading, setLoading] = useState(false);
   let {
     register,
     formState: { errors },
@@ -14,16 +13,18 @@ export default function ForgetPass() {
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
+    if (loading) return;
+
+    setLoading(true);
     try {
-      const response = await axios.post(
-        "https://upskilling-egypt.com:3006/api/v1/Users/Reset/Request",
-        data,
-      );
-      console.log(response);
+      const response = await authAPI.Forgetpass(data);
+
       localStorage.setItem("token", response.data.token);
       navigate("/reset-pass");
     } catch (error) {
-      console.log(error);
+      toast.error(error.response?.data?.message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -39,7 +40,7 @@ export default function ForgetPass() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="input-group   ">
           <span className="input-group-text">
-            <CiMobile1 className="text-muted" />
+            <i className="fa-solid fa-envelope "></i>
           </span>
           <input
             {...register("email", {
@@ -51,7 +52,7 @@ export default function ForgetPass() {
             })}
             type="email"
             placeholder="enter your email"
-            className="form-control "
+            className="form-control custom-input"
             style={{ backgroundColor: "#F7F7F7" }}
           />
         </div>
@@ -59,8 +60,10 @@ export default function ForgetPass() {
           <span className="text-danger">{errors.email.message}</span>
         )}
 
-        <button className="btn btn-success w-100 rounded rounded-2 text-white mt-5">
-          Submit
+        <button
+          disabled={loading}
+          className="auth-btn  w-100 rounded rounded-2 text-white mt-5">
+          {loading ? "Loading..." : "Submit"}
         </button>
       </form>
     </div>
