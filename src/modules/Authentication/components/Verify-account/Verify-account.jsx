@@ -22,7 +22,7 @@ export default function VerifyAccount() {
     try {
       const response = await authAPI.VerifyAccount(data);
       navigate("/login");
-    } catch (error) {
+toast.success("Account verified successfully");    } catch (error) {
       toast.error(error.response?.data?.message);
     } finally {
       setLoading(false);

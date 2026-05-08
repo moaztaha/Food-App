@@ -1,7 +1,9 @@
 import axiosClient from "../axiosClient";
 
-export const GetCategories = () => {
-  return axiosClient.get("/Category");
+export const GetCategories = (params) => {
+  return axiosClient.get("/Category", {
+    params,
+  });
 };
 
 export const GetCategoryById = (id) => {

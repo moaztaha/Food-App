@@ -88,10 +88,10 @@ export default function RecipeData() {
     try {
       if (isUpdate) {
         await UpdateRecipeById(recipeId, formData);
-        toast.success("Updated successfully");
+        toast.success("Updated recipe successfully");
       } else {
         await CreateRecipe(formData);
-        toast.success("Created successfully");
+        toast.success("Created recipe successfully");
       }
 
       navigate("/dashboard/recipes");
@@ -215,7 +215,10 @@ export default function RecipeData() {
           </div>
 
           <div className="btns d-flex justify-content-end mt-5 ">
-            <button type="button" className="outline mx-3">
+            <button
+              onClick={() => navigate("/dashboard/recipes")}
+              type="button"
+              className="outline mx-3">
               Cancel
             </button>
             <button className="">Save</button>

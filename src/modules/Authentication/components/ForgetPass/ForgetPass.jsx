@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { authAPI } from "../../../../api";
+import { toast } from "react-toastify";
 
 export default function ForgetPass() {
   const [loading, setLoading] = useState(false);
@@ -18,16 +19,14 @@ export default function ForgetPass() {
     setLoading(true);
     try {
       const response = await authAPI.Forgetpass(data);
-
-      localStorage.setItem("token", response.data.token);
+      toast.success("Reset code sent successfully");
       navigate("/reset-pass");
     } catch (error) {
-      toast.error(error.response?.data?.message);
     } finally {
       setLoading(false);
     }
   };
-  
+
   return (
     <div>
       <div className="title mb-5">

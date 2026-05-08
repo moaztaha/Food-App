@@ -11,26 +11,55 @@ import DeleteConfirmation from "../../../Shared/components/DeleteConfirmation/De
 import { useNavigate } from "react-router-dom";
 import { FavRecipes } from "../../../../api/modules/fav";
 import { AuthContext } from "../../../../context/AuthContext";
+import { GetCategories } from "../../../../api/modules/category";
+import { GetTags } from "../../../../api/modules/tags";
 
 export default function RecipesList() {
   const [recipeList, setRecipeList] = useState([]);
   const [recipeId, setRecipeId] = useState(0);
   const [recipeName, setRecipeName] = useState("");
+  // Pagination
+  const [pageNumber, setPageNumber] = useState(1);
+  const [pageSize] = useState(5);
+  const [totalPages, setTotalPages] = useState(1);
+
+  // Filteration
   const [searchName, setSearchName] = useState("");
-  const [selectedTag, setSelectedTag] = useState("all");
-  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [tagId, setTagId] = useState("");
+  const [categoryId, setCategoryId] = useState("");
+  const [categories, setCategories] = useState([]);
+  const [tags, setTags] = useState([]);
 
-  const filteredRecipes = recipeList.filter((item) => {
-    const name = item.name.toLowerCase().includes(searchName.toLowerCase());
+  const getFiltersData = async () => {
+    try {
+      const [catRes, tagRes] = await Promise.all([
+        GetCategories({ pageSize: 1000, pageNumber: 1 }),
+        GetTags(),
+      ]);
 
-    const tag = selectedTag === "all" || item.tag?.name === selectedTag;
+      setCategories(catRes.data.data);
+      setTags(tagRes.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  // Pagenation
+  const getPages = () => {
+    const pages = [];
 
-    const category =
-      selectedCategory === "all" ||
-      item.category?.[0]?.name === selectedCategory;
+    const start = Math.max(1, pageNumber - 1);
+    const end = Math.min(totalPages, pageNumber + 1);
 
-    return name && tag && category;
-  });
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    return pages;
+  };
+
+  useEffect(() => {
+    getFiltersData();
+  }, []);
 
   const navigate = useNavigate();
   const { loginData } = useContext(AuthContext);
@@ -59,10 +88,18 @@ export default function RecipesList() {
 
   const getRecipeList = async () => {
     try {
-      const response = await GetRecipe();
+      const response = await GetRecipe({
+        name: searchName,
+        tagId: tagId,
+        categoryId: categoryId,
+        pageSize: 5,
+        pageNumber,
+      });
+
       setRecipeList(response.data.data);
+      setTotalPages(response.data.totalNumberOfPages);
     } catch (error) {
-      toast.error("Unable to fetch data from API");
+      toast.error("Unable to fetch recipes");
     }
   };
   const deleteRecipe = async () => {
@@ -95,8 +132,12 @@ export default function RecipesList() {
     setShowView(true);
   };
   useEffect(() => {
-    getRecipeList();
-  }, []);
+    const delay = setTimeout(() => {
+      getRecipeList();
+    }, 400);
+
+    return () => clearTimeout(delay);
+  }, [searchName, tagId, categoryId, pageNumber]);
 
   return (
     <>
@@ -124,34 +165,43 @@ export default function RecipesList() {
       <div className="px-4 mb-2 d-flex gap-4 position-relative input-search ">
         <input
           type="text"
+          placeholder="Search recipe name"
           className="form-control w-50"
-          placeholder="Search recipe..."
           value={searchName}
-          onChange={(e) => setSearchName(e.target.value)}
+          onChange={(e) => {
+            setSearchName(e.target.value);
+            setPageNumber(1);
+          }}
         />
         <select
-          className="form-select w-25"
-          value={selectedTag}
-          onChange={(e) => setSelectedTag(e.target.value)}>
-          <option value="all">All Tags</option>
-          {[...new Set(recipeList.map((r) => r.tag?.name))].map((tag, i) => (
-            <option key={i} value={tag}>
-              {tag}
+          className="form-control  w-25"
+          value={tagId}
+          onChange={(e) => {
+            setTagId(e.target.value);
+            setPageNumber(1);
+          }}>
+          <option value="">All Tags</option>
+
+          {tags.map((tag) => (
+            <option key={tag.id} value={tag.id}>
+              {tag.name}
             </option>
           ))}
         </select>
         <select
-          className="form-select w-25"
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}>
-          <option value="all">All Categories</option>
-          {[...new Set(recipeList.map((r) => r.category?.[0]?.name))].map(
-            (cat, i) => (
-              <option key={i} value={cat}>
-                {cat}
-              </option>
-            ),
-          )}
+          className="form-control w-25"
+          value={categoryId}
+          onChange={(e) => {
+            setCategoryId(e.target.value);
+            setPageNumber(1);
+          }}>
+          <option value="">All Categories</option>
+
+          {categories.map((cat) => (
+            <option key={cat.id} value={cat.id}>
+              {cat.name}
+            </option>
+          ))}
         </select>
       </div>
       {/* Delete Modal */}
@@ -168,7 +218,7 @@ export default function RecipesList() {
         </Modal.Footer>
       </Modal>
 
-      {/* View Modal */}
+      {/* View Modal user */}
       <Modal
         show={showView}
         onHide={() => setShowView(false)}
@@ -245,7 +295,7 @@ export default function RecipesList() {
             </thead>
 
             <tbody>
-              {filteredRecipes.map((item) => (
+              {recipeList.map((item) => (
                 <tr className="p-4" key={item.id}>
                   <th scope="row">{item.id}</th>
                   <td>{item.name}</td>
@@ -268,7 +318,7 @@ export default function RecipesList() {
                     {loginData?.userGroup !== "SystemUser" ? (
                       <>
                         <i
-                          onClick={() => handleUpdateShow(item)}
+                          onClick={() => handleUpdateNavigate(item.id)}
                           className="fa-solid fa-pen-to-square mx-3 table-icon"></i>
                         <i
                           onClick={() => handleDeleteShow(item)}
@@ -289,6 +339,55 @@ export default function RecipesList() {
         ) : (
           <NoData />
         )}
+        <div className="d-flex justify-content-center align-items-center gap-2 my-4">
+          <button
+            className="pagination-btn"
+            disabled={pageNumber === 1}
+            onClick={() => setPageNumber((prev) => prev - 1)}>
+            Prev
+          </button>
+
+          {pageNumber > 2 && (
+            <>
+              <button
+                className="pagination-btn"
+                onClick={() => setPageNumber(1)}>
+                1
+              </button>
+
+              {pageNumber > 3 && <span>...</span>}
+            </>
+          )}
+
+          {getPages().map((page) => (
+            <button
+              key={page}
+              onClick={() => setPageNumber(page)}
+              className={`pagination-btn ${pageNumber === page ? "active" : ""}`}>
+              {page}
+            </button>
+          ))}
+
+          {pageNumber < totalPages - 1 && (
+            <>
+              {pageNumber < totalPages - 2 && <span>...</span>}
+
+              <button
+                className="pagination-btn"
+                onClick={() => setPageNumber(totalPages)}>
+                {totalPages}
+              </button>
+            </>
+          )}
+
+          {/* Next */}
+          <button
+            className="pagination-btn"
+            disabled={pageNumber === totalPages}
+            onClick={() => setPageNumber((prev) => prev + 1)}>
+            Next
+          </button>
+        </div>
       </div>
     </>
   );

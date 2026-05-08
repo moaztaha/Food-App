@@ -322,6 +322,32 @@ button {
   border-radius: 50%;
   background-color: #009247;
   cursor: pointer;
-  
+
+}
+
+
+.pagination-btn {
+  border: 1px solid #009247;
+  background-color: transparent;
+  color: #009247;
+  padding: 6px 12px;
+  border-radius: 8px;
+  transition: 0.3s;
+}
+
+.pagination-btn:hover {
+  background-color: #009247;
+  color: white;
+}
+
+.pagination-btn.active {
+  background-color: #009247;
+  color: white;
+  font-weight: bold;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 

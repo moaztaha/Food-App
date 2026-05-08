@@ -3,12 +3,14 @@ import { authAPI } from "../../../../api";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import logo from "../../../../assets/images/logo.png";
+import { useNavigate } from "react-router-dom";
 
 export default function ChangePass({ onClose }) {
   const [loading, setLoading] = useState(false);
   const [showOldPassword, setShowOldPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const navigate = useNavigate()
 
   const toggleOldPassword = () => {
     setShowOldPassword(!showOldPassword);
@@ -36,6 +38,7 @@ export default function ChangePass({ onClose }) {
     try {
       const response = await authAPI.ChangePassword(data);
       toast.success("Password changed successfully");
+       navigate("/login");
       onClose();
     } catch (error) {
       toast.error("Feild to change password");

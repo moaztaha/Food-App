@@ -1,7 +1,7 @@
 import axiosClient from "../axiosClient";
 
-export const GetUsers = () => {
-  return axiosClient.get("/Users");
+export const GetUsers = (params) => {
+  return axiosClient.get("/Users", { params });
 };
 
 export const DeleteuserById = (id) => {

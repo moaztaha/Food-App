@@ -1,7 +1,10 @@
 import axiosClient from "../axiosClient";
 
-export const GetRecipe = () => {
-  return axiosClient.get("/Recipe");
+
+export const GetRecipe = (params) => {
+  return axiosClient.get("/Recipe", {
+    params,
+  });
 };
 
 export const CreateRecipe = (data) => {

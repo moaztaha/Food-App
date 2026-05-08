@@ -50,11 +50,13 @@ export default function SideBar() {
             Recipes
           </MenuItem>
 
-          <MenuItem
-            icon={<i className="fa-solid fa-list"></i>}
-            component={<Link to="/dashboard/categories" />}>
-            Categories
-          </MenuItem>
+          {isAdmin && (
+            <MenuItem
+              icon={<i className="fa-solid fa-list"></i>}
+              component={<Link to="/dashboard/categories" />}>
+              Categories
+            </MenuItem>
+          )}
 
           {!isAdmin && (
             <MenuItem

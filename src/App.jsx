@@ -49,7 +49,6 @@ function App() {
         { path: "", element: <Dashboard /> },
         { path: "recipes", element: <RecipesList  /> },
         { path: "recipe-data/:recipeId?", element: <RecipeData /> },
-        { path: "recipe-data", element: <RecipeData /> },
         { path: "categories", element: <CategoriesList  /> },
         { path: "users", element: <UsersList /> },
         { path: "favourites", element: <FavouritesList /> },
