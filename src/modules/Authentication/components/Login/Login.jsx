@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { authAPI } from "../../../../api";
-export default function Login({ saveLoginData }) {
+import { AuthContext } from "../../../../context/authContext";
+export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { saveLoginData } = useContext(AuthContext);
 
   const togglePassword = () => {
     setShowPassword(!showPassword);
@@ -17,18 +19,16 @@ export default function Login({ saveLoginData }) {
     handleSubmit,
   } = useForm();
   const navigate = useNavigate();
- 
 
-  
   const onSubmit = async (data) => {
-     if (loading) return;
-     setLoading(true);
+    if (loading) return;
+    setLoading(true);
     try {
       const response = await authAPI.Login(data);
       localStorage.setItem("token", response.data.token);
+      navigate("/dashboard");
       saveLoginData();
       toast.success("Login Successfully");
-      navigate("/dashboard");
     } catch (error) {
       toast.error(error.response?.data);
     } finally {

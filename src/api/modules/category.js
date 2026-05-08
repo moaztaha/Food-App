@@ -13,7 +13,7 @@ export const CreatCategory = (data) => {
 };
 
 export const UpdateCategoryById = (id, data) => {
-  return axiosClient.put(`/Category/${id}`);
+  return axiosClient.put(`/Category/${id}`,data);
 };
 
 export const DeleteCategoryById = (id) => {

@@ -27,7 +27,7 @@ export default function ForgetPass() {
       setLoading(false);
     }
   };
-
+  
   return (
     <div>
       <div className="title mb-5">

@@ -21,25 +21,15 @@ import VerifyAccount from "./modules/Authentication/components/Verify-account/Ve
 
 function App() {
 
-  let [loginData, setLoginData] = useState(null);
 
-  const saveLoginData = () => {
-    let encoddedToken = localStorage.getItem("token");
-    let decoddedToken = jwtDecode(encoddedToken);
-    setLoginData(decoddedToken);
-  };
-
-  useEffect(() => {
-    if (localStorage.getItem("token")) saveLoginData();
-  }, []);
   const routes = createBrowserRouter([
     {
       path: "",
       element: <AuthLayout />,
       errorElement: <NotFound />,
       children: [
-        { index: true, element: <Login saveLoginData={saveLoginData} /> },
-        { path: "login", element: <Login saveLoginData={saveLoginData} /> },
+        { index: true, element: <Login  /> },
+        { path: "login", element: <Login  /> },
         { path: "register", element: <Register /> },
         { path: "verify-account", element: <VerifyAccount /> },
         { path: "forget-pass", element: <ForgetPass /> },
@@ -49,17 +39,18 @@ function App() {
     {
       path: "dashboard",
       element: (
-        <ProtectedRoute>
-          <MasterLayout loginData={loginData} />
+        <ProtectedRoute >
+          <MasterLayout />
         </ProtectedRoute>
       ),
       errorElement: <NotFound />,
       children: [
         { index: true, element: <Dashboard /> },
         { path: "", element: <Dashboard /> },
-        { path: "recipes", element: <RecipesList /> },
-        { path: "recipes-data", element: <RecipeData /> },
-        { path: "categories", element: <CategoriesList /> },
+        { path: "recipes", element: <RecipesList  /> },
+        { path: "recipe-data/:recipeId?", element: <RecipeData /> },
+        { path: "recipe-data", element: <RecipeData /> },
+        { path: "categories", element: <CategoriesList  /> },
         { path: "users", element: <UsersList /> },
         { path: "favourites", element: <FavouritesList /> },
       ],
@@ -68,7 +59,12 @@ function App() {
 
   return (
     <>
-      <ToastContainer position="bottom-right" autoClose={3000} theme="colored" />
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        theme="light"
+        hideProgressBar={true}
+      />
       <RouterProvider router={routes}></RouterProvider>
     </>
   );

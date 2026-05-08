@@ -4,9 +4,9 @@ const axiosClient = axios.create({
   baseURL: "https://upskilling-egypt.com:3006/api/v1",
   timeout: 5000,
   headers: {
-    "Content-Type": "application/json",
+      
   },
-    //   withCredentials: true,
+
 });
 
 axiosClient.interceptors.request.use(
@@ -25,7 +25,7 @@ axiosClient.interceptors.request.use(
 axiosClient.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response.status === 401) {
+    if (error.response?.status === 401) {
       localStorage.removeItem("token");
       window.location.href = "/login";
     }

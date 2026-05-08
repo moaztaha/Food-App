@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { authAPI } from "../../../../api";
-
+import { toast } from "react-toastify";
 export default function Register() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -14,11 +14,14 @@ export default function Register() {
   const toggleConfirmPassword = () => {
     setShowConfirmPassword(!showConfirmPassword);
   };
-  let {
+  const {
     register,
-    formState: { errors },
     handleSubmit,
+    formState: { errors },
+    watch,
   } = useForm();
+
+  const password = watch("password");
   const navigate = useNavigate();
 
   const onSubmit = async (data) => {
@@ -27,7 +30,9 @@ export default function Register() {
     setLoading(true);
     try {
       const response = await authAPI.Register(data);
-      navigate("/login");
+      navigate("/verify-account");
+      toast.success("Succesfully register");
+      console.log(response.data.email);
     } catch (error) {
       toast.error(error.response?.data?.message);
     } finally {
@@ -47,7 +52,7 @@ export default function Register() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="d-flex gap-3">
           <div className="w-50">
-            <div className="input-group">
+            <div className="input-group my-3">
               <span className="input-group-text">
                 <i className="fa-solid fa-user  "></i>
               </span>
@@ -55,8 +60,8 @@ export default function Register() {
                 {...register("userName", {
                   required: "field is required",
                   pattern: {
-                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                    message: "userName is not valid",
+                    value: /^[a-zA-Z]+[0-9]+$/,
+                    message: "must start with letters and end with numbers",
                   },
                 })}
                 type="text"
@@ -68,28 +73,24 @@ export default function Register() {
               <span className="text-danger">{errors.userName.message}</span>
             )}
 
-            <div className="input-group   ">
+            <div className="input-group my-3   ">
               <span className="input-group-text">
-                <i class="fa-solid fa-earth-europe "></i>
+                <i className="fa-solid fa-earth-europe "></i>
               </span>
               <input
                 {...register("country", {
                   required: "field is required",
-                  pattern: {
-                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                    message: "country is not valid",
-                  },
                 })}
                 type="text"
                 placeholder="Country"
                 className="form-control custom-input"
               />
             </div>
-            {errors.counrty && (
-              <span className="text-danger">{errors.counrty.message}</span>
+            {errors.country && (
+              <span className="text-danger">{errors.country.message}</span>
             )}
 
-            <div className="input-group   ">
+            <div className="input-group   my-3">
               <span className="input-group-text">
                 <i className="fa-solid fa-lock  "></i>
               </span>
@@ -120,7 +121,7 @@ export default function Register() {
           </div>
 
           <div className="w-50">
-            <div className="input-group   ">
+            <div className="input-group my-3   ">
               <span className="input-group-text">
                 <i className="fa-solid fa-envelope  "></i>
               </span>
@@ -141,16 +142,16 @@ export default function Register() {
               <span className="text-danger">{errors.email.message}</span>
             )}
 
-            <div className="input-group   ">
+            <div className="input-group my-3  ">
               <span className="input-group-text">
-                <i class="fa-solid fa-mobile "></i>
+                <i className="fa-solid fa-mobile "></i>
               </span>
               <input
                 {...register("phoneNumber", {
                   required: "field is required",
                   pattern: {
-                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                    message: "phoneNumber is not valid",
+                    value: /^[0-9]{10,15}$/,
+                    message: "Invalid phone number",
                   },
                 })}
                 type="text"
@@ -162,17 +163,15 @@ export default function Register() {
               <span className="text-danger">{errors.phoneNumber.message}</span>
             )}
 
-            <div className="input-group   ">
+            <div className="input-group my-3  ">
               <span className="input-group-text">
                 <i className="fa-solid fa-lock  "></i>
               </span>
               <input
                 {...register("confirmPassword", {
                   required: "field is required",
-                  pattern: {
-                    value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                    message: "Not the same",
-                  },
+                  validate: (value) =>
+                    value === password || "Passwords do not match",
                 })}
                 type={showConfirmPassword ? "text" : "password"}
                 placeholder="confirm-password"
@@ -191,6 +190,11 @@ export default function Register() {
               </span>
             )}
           </div>
+        </div>
+        <div className="d-flex justify-content-end">
+          <Link className="main-color" to="/login">
+            Login now?
+          </Link>
         </div>
 
         <button

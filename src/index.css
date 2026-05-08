@@ -5,6 +5,12 @@
 body {
   font-family: "Inter", sans-serif;
 }
+:root {
+  --auht-primary-color:#4aa35a;
+  --mastry-primary-color:#009247;
+  --secondary-color:#1F263E;
+  
+}
 
 /* Main */
 .auth-container {
@@ -90,11 +96,10 @@ button {
 
 
 .bg-header {
-  background-image: url("./assets/images/header-bg-svg.svg");
-  background-position: center center;
+  background-image: url("./assets/images/bg-green.jpg");
   background-repeat: no-repeat;
   background-size: cover;
-
+  background-position: center;
 }
 
 /* Sidebar style */
@@ -115,9 +120,7 @@ button {
 }
 
 
-/*  */
-
-.category-btn {
+.section-btn {
   background-color: #009247;
   border: #009247;
   color: white;
@@ -125,12 +128,17 @@ button {
 }
 
 .custom-table {
-  border: none !important;
+  border-collapse: separate !important;
+  border-spacing: 0;
+  border-radius: 16px;
+  overflow: hidden;
 }
+
 .custom-table th,
 .custom-table td {
   border: none ;
   padding: 18px;
+ 
 }
 
 
@@ -139,15 +147,14 @@ button {
 }
 .custom-table thead th {
   background-color: #E2E5EB;   
-  padding: 18px;
-  
-  
+  padding: 20px;
 }
 
 .custom-table th,
 .custom-table td {
-  padding: 20px;
+  padding: 15px;
   text-align: center;
+  
 }
 
 .custom-table tbody tr:nth-child(even) td,
@@ -155,6 +162,10 @@ button {
     background-color: #F8F9FB !important; 
 }
 
+.custom-table tbody tr:nth-child(odd) td,
+.custom-table tbody tr:nth-child(odd) th {
+    background-color: #ffffff !important; 
+}
 .table-icon {
   font-size: 20px;
   color: #009247;
@@ -163,11 +174,154 @@ button {
 }
 
 .table-img {
+  height: 50px;
   width: 50px;
+  border-radius: 10px;
 }
 
 
+.modal-title {
+  color: #494949;
+  font-weight: bold;
+}
 
 
+.modal-btn {
+  background-color: #009247;
+  border-color:#009247;
+}
 
+
+.recipe-header {
+  background-color: #F0FFEF;
+  border-radius: 15px;
+}
+
+.recipe-title {
+  color: #009247;
+}
+
+
+.uploade-box {
+  background-color:#F0FFEF ;
+  border: 3px dashed #009247;
+   cursor: pointer;
+}
+
+.upload-label {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  cursor: pointer;
+  font-weight: 500;
+
+}
+
+.upload-icon {
+  font-size: 30px;
+  margin-bottom: 5px;
+  color:#009247 ;
+}
+
+.img-span {
+  color: #009247;
+}
+
+
+.btns button  {
+  background-color: #009247;
+  border-color: #009247;
+  padding: 12px 22px;
+  border-radius: 10px;
+  color: white;
+}
+
+.btns .outline  {
+  background-color: transparent;
+ border: 1px solid #009247 ;
+  color: #009247;
+}
+
+.not-found h2 {
+  font-size: 50px;
+  color:#1F263E ;
+}
+
+.not-found p {
+  font-size: 45px;
+  color: #009247;
+}
+
+.not-found .disc {
+  font-size: 20px;
+  color: black;
+}
+
+
+.not-found button {
+  padding: 10px 80px;
+  border-radius: 3px;
+  color: white;
+  background-color: #009247;
+  font-weight: bold;
+  font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+}
+
+.not-found button i {
+  margin-right: 15px;
+}
+
+
+.fav-btn {
+  background-color: #009247;
+  color: white;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.4s;
+}
+
+.fav-btn:hover{
+    background-color: white;
+  color: #009247;
+}
+
+
+.input-search input{
+  background-color: white;
+
+}
+
+.input-search input::placeholder{
+  color: #8391a1;
+
+}
+
+.input-search i{
+  color: #8391a1;
+}
+
+
+.fav-img {
+  height: 180px;
+  object-fit: cover;
+}
+
+.remove-btn {
+  margin: 5px;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background-color: #009247;
+  cursor: pointer;
+  
+}
 

@@ -19,3 +19,7 @@ export const ResetPass = (data) => {
 export const VerifyAccount = (data) => {
   return axiosClient.put("/Users/verify", data);
 };
+
+export const ChangePassword = (data) => {
+  return axiosClient.put("/Users/ChangePassword", data);
+};
