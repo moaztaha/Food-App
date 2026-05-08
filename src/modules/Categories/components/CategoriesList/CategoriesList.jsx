@@ -16,7 +16,7 @@ import { FaGlassWater } from "react-icons/fa6";
 import { Form } from "react-bootstrap";
 import DeleteConfirmation from "../../../Shared/components/DeleteConfirmation/DeleteConfirmation";
 import { useForm } from "react-hook-form";
-import { AuthContext } from "../../../../context/authContext";
+import { AuthContext } from "../../../../context/AuthContext";
 
 export default function CategoriesList() {
   const [categoryList, setCategoryList] = useState([]);

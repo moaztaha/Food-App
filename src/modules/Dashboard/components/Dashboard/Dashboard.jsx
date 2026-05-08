@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import Header from "../../../Shared/components/Header/Header";
 import headerImg from "../../../../assets/images/header-girl.png"
 import { useNavigate } from "react-router-dom";
-import { AuthContext } from '../../../../context/authContext';
+import { AuthContext } from "../../../../context/AuthContext";
 
 export default function Dashboard() {
   const navigate = useNavigate();

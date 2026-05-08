@@ -10,7 +10,7 @@ import { Button } from "react-bootstrap";
 import DeleteConfirmation from "../../../Shared/components/DeleteConfirmation/DeleteConfirmation";
 import { useNavigate } from "react-router-dom";
 import { FavRecipes } from "../../../../api/modules/fav";
-import { AuthContext } from "../../../../context/authContext";
+import { AuthContext } from "../../../../context/AuthContext";
 
 export default function RecipesList() {
   const [recipeList, setRecipeList] = useState([]);

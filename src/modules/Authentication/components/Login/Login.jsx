@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { authAPI } from "../../../../api";
-import { AuthContext } from "../../../../context/authContext";
+import { AuthContext } from "../../../../context/AuthContext";
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);

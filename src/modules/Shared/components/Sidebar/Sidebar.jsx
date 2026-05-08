@@ -4,7 +4,7 @@ import { Sidebar, Menu, MenuItem, SubMenu } from "react-pro-sidebar";
 import logo from "../../../../assets/images/3.png";
 import { Modal } from "react-bootstrap";
 import ChangePass from "../../../Authentication/components/ChangePass/ChangePass";
-import { AuthContext } from "../../../../context/authContext";
+import { AuthContext } from "../../../../context/AuthContext";
 
 export default function SideBar() {
   const navigate = useNavigate();
